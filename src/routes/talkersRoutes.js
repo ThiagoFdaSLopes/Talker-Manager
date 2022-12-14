@@ -3,6 +3,10 @@ const readFile = require('../utils/fs/readFile');
 
 const router = express.Router();
 
+router.post('/login', (req, res) => {
+  res.status(200).json({ message: 'Criando Rota' });
+});
+
 router.get('/talker', async (_req, res) => {
   const db = await readFile();
   res.status(200).json(db);
