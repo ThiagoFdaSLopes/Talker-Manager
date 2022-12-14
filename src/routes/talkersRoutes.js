@@ -1,10 +1,14 @@
 const express = require('express');
 const readFile = require('../utils/fs/readFile');
+const checkEmail = require('../middleware/checkEmail');
+const checkPassword = require('../middleware/checkPassword');
+const tokenGenerator = require('../utils/Generator/tokenGenerator');
 
 const router = express.Router();
 
-router.post('/login', (req, res) => {
-  res.status(200).json({ message: 'Criando Rota' });
+router.post('/login', checkEmail, checkPassword, (req, res) => {
+  const tokenId = tokenGenerator();
+  res.status(200).json({ token: `${tokenId}` });
 });
 
 router.get('/talker', async (_req, res) => {
