@@ -46,6 +46,18 @@ router.delete('/talker/:id', checkToken, async (req, res) => {
   res.status(204).send();
 });
 
+router.get('/talker/search', checkToken, async (req, res) => {
+  const { q } = req.query;
+  const fileDB = await readFile();
+  const talker = fileDB.filter((e) => e.name.includes(q));
+  if (!q) {
+    return res.status(200).json(fileDB);
+  }
+  if (!talker) return res.status(200).json([]);
+
+  res.status(200).json(talker);
+});
+
 router.get('/talker', async (_req, res) => {
   const db = await readFile();
   res.status(200).json(db);
@@ -53,11 +65,11 @@ router.get('/talker', async (_req, res) => {
 
 router.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-
+  
   const data = await readFile();
-
+  
   const talker = data.find((e) => e.id === Number(id));
-
+  
   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   
   res.status(200).json(talker);
