@@ -6,7 +6,6 @@ const checkTalk = (req, res, next) => {
     return res.status(400)
     .json({ message: 'O campo "watchedAt" é obrigatório' }); 
   }
-  if (!talk.rate) return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
 
   next();
 };

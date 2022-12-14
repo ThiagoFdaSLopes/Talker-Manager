@@ -10,8 +10,30 @@ const checkAge = require('../middleware/checkAge');
 const checkTalk = require('../middleware/checkTalk');
 const checkWatchedAt = require('../middleware/checkWatchedAt');
 const checkRate = require('../middleware/checkRate');
+const checkRateExists = require('../middleware/checkRateExists');
 
 const router = express.Router();
+
+router.put('/talker/:id',
+checkToken, 
+checkName,
+checkAge,
+checkTalk,
+checkWatchedAt,
+checkRateExists,
+checkRate,
+async (req, res) => {
+  const { id } = req.params;
+  const fileDB = await readFile();
+  const index = fileDB.indexOf((e) => e.id === Number(id));
+  fileDB.splice(index, 1);
+
+  const newTalker = { id: fileDB.length + 1, ...req.body };
+
+  fileDB.push(newTalker);
+  await writeFile(JSON.stringify(fileDB, null, 2));
+  res.status(200).json(newTalker);
+});
 
 router.post('/login', checkEmail, checkPassword, (req, res) => {
   const tokenId = tokenGenerator();
@@ -24,7 +46,8 @@ router.post('/talker',
   checkAge,
   checkTalk,
   checkWatchedAt,
-  checkRate, 
+  checkRateExists,
+  checkRate,
   async (req, res) => {
     const fileDB = await readFile();
     const id = fileDB.length + 1;
