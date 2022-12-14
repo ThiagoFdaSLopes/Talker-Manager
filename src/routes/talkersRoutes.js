@@ -36,6 +36,16 @@ router.post('/talker',
     res.status(201).json(newTalker);
 });
 
+router.delete('/talker/:id', checkToken, async (req, res) => {
+  const { id } = req.params;
+
+  const fileDB = await readFile();
+  const index = fileDB.indexOf((e) => e.id === Number(id));
+  fileDB.splice(index, 1);
+  await writeFile(JSON.stringify(fileDB, null, 2));
+  res.status(204).send();
+});
+
 router.get('/talker', async (_req, res) => {
   const db = await readFile();
   res.status(200).json(db);
