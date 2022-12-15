@@ -25,14 +25,13 @@ checkRate,
 async (req, res) => {
   const { id } = req.params;
   const fileDB = await readFile();
-  const index = fileDB.indexOf((e) => e.id === Number(id));
-  fileDB.splice(index, 1);
+  const index = fileDB.findIndex((e) => e.id === Number(id));
+  console.log(index);
 
   const idP = Number(id);
-
   const newTalker = { id: idP, ...req.body };
+  fileDB[index] = newTalker;
 
-  fileDB.push(newTalker);
   await writeFile(JSON.stringify(fileDB, null, 2));
   res.status(200).json(newTalker);
 });
@@ -65,7 +64,7 @@ router.delete('/talker/:id', checkToken, async (req, res) => {
   const { id } = req.params;
 
   const fileDB = await readFile();
-  const index = fileDB.indexOf((e) => e.id === Number(id));
+  const index = fileDB.findIndex((e) => e.id === Number(id));
   fileDB.splice(index, 1);
   await writeFile(JSON.stringify(fileDB, null, 2));
   res.status(204).send();
