@@ -28,7 +28,9 @@ async (req, res) => {
   const index = fileDB.indexOf((e) => e.id === Number(id));
   fileDB.splice(index, 1);
 
-  const newTalker = { id: fileDB.length + 1, ...req.body };
+  const idP = Number(id);
+
+  const newTalker = { id: idP, ...req.body };
 
   fileDB.push(newTalker);
   await writeFile(JSON.stringify(fileDB, null, 2));
